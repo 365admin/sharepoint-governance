@@ -1,6 +1,6 @@
 <#---
-title: Step 1
-tag: step1
+title: Go Install
+tag: app
 ---#>
 
 # Step 1

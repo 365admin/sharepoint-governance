@@ -20,9 +20,9 @@ import (
 	"github.com/365admin/sharepoint-governance/utils"
 )
 
-func SharepointPageinfoPost(ctx context.Context, args []string) (*schemas.PageinfoResponse, error) {
+func PageInfoPost(ctx context.Context, args []string) (*schemas.PageinfoResponse, error) {
 
-	_, pwsherr := execution.ExecutePowerShell("john", "*", "sharepoint-governance", "30-sharepoint", "pageinfo.ps1", "", "-url", args[0])
+	_, pwsherr := execution.ExecutePowerShell("john", "*", "sharepoint-governance", "30-sharepoint-page", "pageinfo.ps1", "", "-url", args[0])
 	if pwsherr != nil {
 		return nil, pwsherr
 	}

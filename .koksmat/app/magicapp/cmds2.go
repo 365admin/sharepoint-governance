@@ -1,14 +1,15 @@
 package magicapp
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/365admin/sharepoint-governance/cmds"
+	"github.com/365admin/sharepoint-governance/utils"
 )
 
 func RegisterCmds() {
+	RootCmd.PersistentFlags().StringVarP(&utils.Output, "output", "o", "", "Output format (json, yaml, xml, etc.)")
+
 	magicCmd := &cobra.Command{
 		Use:   "magic",
 		Short: "Magic Buttons",
@@ -23,35 +24,25 @@ func RegisterCmds() {
 	}
 
 	RootCmd.AddCommand(setupCmd)
-	tasksCmd := &cobra.Command{
-		Use:   "tasks",
-		Short: "Tasks",
+	pageCmd := &cobra.Command{
+		Use:   "page",
+		Short: "SharePoint Pages",
 		Long:  `Describe the main purpose of this kitchen`,
 	}
-
-	RootCmd.AddCommand(tasksCmd)
-	sharepointCmd := &cobra.Command{
-		Use:   "sharepoint",
-		Short: "SharePoint",
-		Long:  `Describe the main purpose of this kitchen`,
-	}
-	SharepointPageinfoPostCmd := &cobra.Command{
-		Use:   "pageinfo",
+	PageInfoPostCmd := &cobra.Command{
+		Use:   "info  url",
 		Short: "Page Info",
-		Long:  ``,
+		Long:  `Get information about a SharePoint page and the site it is located on`,
+		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			ctx := cmd.Context()
-			body, err := os.ReadFile(args[0])
-			if err != nil {
-				panic(err)
-			}
 
-			cmds.SharepointPageinfoPost(ctx, body, args)
+			cmds.PageInfoPost(ctx, args)
 		},
 	}
-	sharepointCmd.AddCommand(SharepointPageinfoPostCmd)
+	pageCmd.AddCommand(PageInfoPostCmd)
 
-	RootCmd.AddCommand(sharepointCmd)
+	RootCmd.AddCommand(pageCmd)
 	buildCmd := &cobra.Command{
 		Use:   "build",
 		Short: "Build",
@@ -66,11 +57,4 @@ func RegisterCmds() {
 	}
 
 	RootCmd.AddCommand(provisionCmd)
-	decommissionCmd := &cobra.Command{
-		Use:   "decommission",
-		Short: "Decommision",
-		Long:  `Describe the main purpose of this kitchen`,
-	}
-
-	RootCmd.AddCommand(decommissionCmd)
 }

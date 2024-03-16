@@ -1,4 +1,0 @@
----
-title: SharePoint
-tag: sharepoint
----

@@ -21,13 +21,13 @@ import (
 	"github.com/365admin/sharepoint-governance/utils"
 )
 
-func SharepointPageinfoPost() usecase.Interactor {
+func PageInfoPost() usecase.Interactor {
 	type Request struct {
 		Url string `query:"url" binding:"required"`
 	}
 	u := usecase.NewInteractor(func(ctx context.Context, input Request, output *schemas.PageinfoResponse) error {
 
-		_, err := execution.ExecutePowerShell("john", "*", "sharepoint-governance", "30-sharepoint", "pageinfo.ps1", "", "-url", input.Url)
+		_, err := execution.ExecutePowerShell("john", "*", "sharepoint-governance", "30-sharepoint-page", "pageinfo.ps1", "", "-url", input.Url)
 		if err != nil {
 			return err
 		}
@@ -45,6 +45,6 @@ func SharepointPageinfoPost() usecase.Interactor {
 	})
 	u.SetTitle("Page Info")
 	// u.SetExpectedErrors(status.InvalidArgument)
-	u.SetTags("SharePoint")
+	u.SetTags("SharePoint Pages")
 	return u
 }

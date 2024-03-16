@@ -1,16 +1,18 @@
 <#---
 title: Page Info
-input: pageinfo.request.json
+description: Get information about a SharePoint page and the site it is located on
 output: pageinfo.response.json
 api: post
-tag: pageinfo
+tag: info
 ---
 
 #>
 
 
-
-$siteUrl = Get-Content (join-path $env:WORKDIR "pageinfo.request.json") | ConvertFrom-Json
+param (
+    $url = "https://christianiabpos.sharepoint.com/sites/nexiintra-home/SitePages/it/Home.aspx"
+    )
+    
 
 $result = join-path $env:WORKDIR "pageinfo.response.json"
 $siteUrl = $url.ToLower().Split("/sitepages/")
@@ -24,7 +26,7 @@ if ($null -eq $pageName) {
 
 $listName = "Site Pages"
 $items = get-pnplistitem -List $listName -Query "<View Scope='RecursiveAll'><Query><Where><Eq><FieldRef Name='FileLeafRef'/><Value Type='Text'>$pageName</Value></Eq></Where></Query></View>"
-$versions = @()
+[array]$versions = @()
 foreach ($item in $items) {
     # $version = Get-PnPListItemVersion -List $listName -Identity $item.Id | Select-Object -First 3 | Select-Object -Property VersionId, VersionLabel, VersionCreationDate, Editor, Modified, Title, FileLeafRef, FileDirRef, FileRef, Author, AuthorLookupId, EditorLookupId, CheckoutUserId, CheckoutUser, CheckoutUserLookupId, CheckoutDate, CheckinComment, IsCurrentVersion, IsDraftVersion, IsMajorVersion, IsMinorVersion, IsApprovedVersion, IsApproverComments
     $versions += @{
@@ -37,7 +39,7 @@ foreach ($item in $items) {
     }
 }
 
-$Owners = Get-PnPGroup -AssociatedOwnerGroup 
+[array]$Owners = Get-PnPGroup -AssociatedOwnerGroup 
 | Get-PnPGroupMember 
 | Where-Object { $_.IsSiteAdmin -ne $true }  
 | Select-Object Title, UserPrincipalName, Email

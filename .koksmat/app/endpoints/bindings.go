@@ -19,7 +19,7 @@ func AddEndpoints(s *web.Service, jwtAuth func(http.Handler) http.Handler) {
 			r.Use(jwtAuth, nethttp.HTTPBearerSecurityMiddleware(s.OpenAPICollector, "Bearer", "", ""))
 			//	r.Use(rateLimitByAppId(50))
 			//r.Method(http.MethodPost, "/", nethttp.NewHandler(ExchangeCreateRoomsPost()))
-			r.Method(http.MethodPost, "/sharepoint/pageinfo", nethttp.NewHandler(SharepointPageinfoPost()))
+			r.Method(http.MethodPost, "/page/info", nethttp.NewHandler(PageInfoPost()))
 
 		})
 	})
