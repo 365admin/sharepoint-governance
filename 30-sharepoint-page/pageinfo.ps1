@@ -2,6 +2,7 @@
 title: Page Info
 description: Get information about a SharePoint page and the site it is located on
 output: pageinfo.response.json
+connection: sharepoint
 api: post
 tag: info
 ---
@@ -10,7 +11,7 @@ tag: info
 
 
 param (
-    $url = "https://christianiabpos.sharepoint.com/sites/nexiintra-home/SitePages/it/Home.aspx"
+    $url = "https://christianiabpos.sharepoint.com/sites/nexiintra-home"
     )
     
 
@@ -23,6 +24,7 @@ $pageName = $siteUrl[1]
 if ($null -eq $pageName) {
     $pageName = (Get-PnPHomePage).ToLower().Replace("sitepages/", "")
 }
+
 
 $listName = "Site Pages"
 $items = get-pnplistitem -List $listName -Query "<View Scope='RecursiveAll'><Query><Where><Eq><FieldRef Name='FileLeafRef'/><Value Type='Text'>$pageName</Value></Eq></Where></Query></View>"

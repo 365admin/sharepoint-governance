@@ -5,10 +5,16 @@ go 1.20
 require (
 	github.com/go-chi/jwtauth/v5 v5.3.0
 	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/nats-io/nats.go v1.31.0
 	github.com/spf13/cobra v1.8.0
 	github.com/swaggest/rest v0.2.61
 	github.com/swaggest/swgui v1.8.0
 	github.com/swaggest/usecase v1.3.1
+)
+
+require (
+	github.com/nats-io/nkeys v0.4.6 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
 )
 
 require (
