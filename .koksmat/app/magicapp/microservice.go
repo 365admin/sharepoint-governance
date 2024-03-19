@@ -13,11 +13,15 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"os"
+	"path"
 	"time"
 
-	"github.com/365admin/sharepoint-governance/cmds"
-	"github.com/nats-io/nats.go"
+	nats "github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/micro"
+
+	"github.com/365admin/sharepoint-governance/cmds"
+	"github.com/365admin/sharepoint-governance/utils"
 )
 
 type ServiceRequest struct {
@@ -31,15 +35,20 @@ func PageInfo(req micro.Request) {
 	var payload ServiceRequest
 	_ = json.Unmarshal([]byte(req.Data()), &payload)
 	log.Println("Page Info", payload)
-	response, err := cmds.PageInfoPost(context.Background(), payload.Args)
+	_, err := cmds.PageInfoPost(context.Background(), payload.Args)
 	if err != nil {
 		log.Println(err)
 		req.Respond([]byte(err.Error()))
 		return
 	}
 	log.Println("done")
-	data, _ := json.Marshal(response)
-	req.RespondJSON(data)
+	resultingFile := path.Join(utils.WorkDir("sharepoint-governance"), "pageinfo.response.json")
+	data, err := os.ReadFile(resultingFile)
+	if err != nil {
+		return
+	}
+
+	req.Respond(data)
 
 }
 

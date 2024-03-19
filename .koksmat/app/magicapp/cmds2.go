@@ -10,20 +10,37 @@ import (
 func RegisterCmds() {
 	RootCmd.PersistentFlags().StringVarP(&utils.Output, "output", "o", "", "Output format (json, yaml, xml, etc.)")
 
-	magicCmd := &cobra.Command{
-		Use:   "magic",
-		Short: "Magic Buttons",
+	healthCmd := &cobra.Command{
+		Use:   "health",
+		Short: "Health",
 		Long:  `Describe the main purpose of this kitchen`,
 	}
+	HealthPingPostCmd := &cobra.Command{
+		Use:   "ping  pong",
+		Short: "Ping",
+		Long:  `Simple ping endpoint`,
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx := cmd.Context()
 
-	RootCmd.AddCommand(magicCmd)
-	setupCmd := &cobra.Command{
-		Use:   "setup",
-		Short: "Setup",
-		Long:  `Describe the main purpose of this kitchen`,
+			cmds.HealthPingPost(ctx, args)
+		},
 	}
+	healthCmd.AddCommand(HealthPingPostCmd)
+	HealthCoreversionPostCmd := &cobra.Command{
+		Use:   "coreversion ",
+		Short: "Core Version",
+		Long:  ``,
+		Args:  cobra.MinimumNArgs(0),
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx := cmd.Context()
 
-	RootCmd.AddCommand(setupCmd)
+			cmds.HealthCoreversionPost(ctx, args)
+		},
+	}
+	healthCmd.AddCommand(HealthCoreversionPostCmd)
+
+	RootCmd.AddCommand(healthCmd)
 	pageCmd := &cobra.Command{
 		Use:   "page",
 		Short: "SharePoint Pages",
@@ -43,18 +60,4 @@ func RegisterCmds() {
 	pageCmd.AddCommand(PageInfoPostCmd)
 
 	RootCmd.AddCommand(pageCmd)
-	buildCmd := &cobra.Command{
-		Use:   "build",
-		Short: "Build",
-		Long:  `Describe the main purpose of this kitchen`,
-	}
-
-	RootCmd.AddCommand(buildCmd)
-	provisionCmd := &cobra.Command{
-		Use:   "provision",
-		Short: "Provision",
-		Long:  `Describe the main purpose of this kitchen`,
-	}
-
-	RootCmd.AddCommand(provisionCmd)
 }

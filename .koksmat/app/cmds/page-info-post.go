@@ -22,7 +22,7 @@ import (
 
 func PageInfoPost(ctx context.Context, args []string) (*schemas.PageinfoResponse, error) {
 
-	_, pwsherr := execution.ExecutePowerShell("john", "*", "sharepoint-governance", "30-sharepoint-page", "pageinfo.ps1", "", "-url", args[0])
+	result, pwsherr := execution.ExecutePowerShell("john", "*", "sharepoint-governance", "30-sharepoint-page", "pageinfo.ps1", "", "-url", args[0])
 	if pwsherr != nil {
 		return nil, pwsherr
 	}
@@ -37,6 +37,8 @@ func PageInfoPost(ctx context.Context, args []string) (*schemas.PageinfoResponse
 	if utils.Output == "json" {
 		fmt.Println(string(data))
 	}
-	return &resultObject, nil
+	utils.PrintSkip2FirstAnd2LastLines(string(result))
+
+	return nil, nil
 
 }
