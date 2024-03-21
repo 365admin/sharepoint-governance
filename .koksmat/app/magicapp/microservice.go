@@ -19,6 +19,7 @@ import (
 
 	nats "github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/micro"
+	"github.com/spf13/viper"
 
 	"github.com/365admin/sharepoint-governance/cmds"
 	"github.com/365admin/sharepoint-governance/utils"
@@ -74,9 +75,14 @@ func StartMicroService() {
 	}
 
 	go func() {
-		nc, err = nats.Connect(nats.DefaultURL, opts...)
+		natsServer := viper.GetString("NATS")
+		if natsServer == "" {
+			natsServer = "nats://127.0.0.1:4222"
+		}
+		log.Println("Connecting to", natsServer)
+		nc, err = nats.Connect(natsServer, opts...)
 	}()
-
+	retryCount := 0
 WaitForEstablishedConnection:
 	for {
 		if err != nil {
@@ -93,7 +99,10 @@ WaitForEstablishedConnection:
 		}
 
 		if nc == nil || !nc.IsConnected() {
-			log.Println("Connection not ready")
+			if retryCount != 0 {
+				log.Println("Connection not ready")
+			}
+			retryCount++
 			time.Sleep(200 * time.Millisecond)
 			continue
 		}
@@ -102,7 +111,7 @@ WaitForEstablishedConnection:
 	if ctx.Err() != nil {
 		log.Fatal(ctx.Err())
 	}
-
+	log.Println("Connected")
 	srv, err := micro.AddService(nc, micro.Config{
 		Name: "sharepoint-governance",
 
