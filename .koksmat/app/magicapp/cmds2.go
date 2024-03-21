@@ -60,4 +60,23 @@ func RegisterCmds() {
 	pageCmd.AddCommand(PageInfoPostCmd)
 
 	RootCmd.AddCommand(pageCmd)
+	provisionCmd := &cobra.Command{
+		Use:   "provision",
+		Short: "Provision",
+		Long:  `Describe the main purpose of this kitchen`,
+	}
+	ProvisionAppdeployproductionPostCmd := &cobra.Command{
+		Use:   "appdeployproduction ",
+		Short: "App deploy to production",
+		Long:  ``,
+		Args:  cobra.MinimumNArgs(0),
+		Run: func(cmd *cobra.Command, args []string) {
+			ctx := cmd.Context()
+
+			cmds.ProvisionAppdeployproductionPost(ctx, args)
+		},
+	}
+	provisionCmd.AddCommand(ProvisionAppdeployproductionPostCmd)
+
+	RootCmd.AddCommand(provisionCmd)
 }

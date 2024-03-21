@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/365admin/sharepoint-governance/magicapp"
+	"github.com/365admin/sharepoint-governance/utils"
 )
 
 func main() {
@@ -22,6 +23,8 @@ description: Describe the main purpose of this kitchen
 `
 	magicapp.Setup(".env")
 	magicapp.RegisterServeCmd("sharepoint-governance", description, "0.0.1", 8080)
+	magicapp.RootCmd.PersistentFlags().BoolVarP(&utils.Verbose, "verbose", "v", false, "verbose output")
+
 	magicapp.RegisterCmds()
 	magicapp.RegisterServiceCmd()
 	magicapp.Execute(name, "sharepoint-governance", "")

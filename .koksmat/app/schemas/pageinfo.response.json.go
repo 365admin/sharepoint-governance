@@ -9,7 +9,7 @@ type PageinfoResponse struct {
 	} `json:"siteowners"`
 	Versions []struct {
 		Folder         interface{} `json:"folder"`
-		IsTranslation  bool        `json:"isTranslation"`
+		IsTranslation  interface{} `json:"isTranslation"`
 		LastModified   string      `json:"lastModified"`
 		LastModifiedBy string      `json:"lastModifiedBy"`
 		Page           string      `json:"page"`
