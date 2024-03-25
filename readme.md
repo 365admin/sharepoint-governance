@@ -1,9 +1,10 @@
 ---
-title: sharepoint-governance
+title: SharePoint Governance
 description: Describe the main purpose of this kitchen
 ---
 
 #
+
 # SharePoint Governance Service
 
 This services is providing methods for getting easy access to information about e.g. who is responsible for the content of any given page as well as easy access to who is the owners of the site.
@@ -15,6 +16,7 @@ sharepoint-governance page info https://christianiabpos.sharepoint.com/sites/nex
 ```
 
 Result
+
 ```json
 {
   "versions": [
@@ -82,6 +84,4 @@ Result
     }
   ]
 }
-
 ```
-

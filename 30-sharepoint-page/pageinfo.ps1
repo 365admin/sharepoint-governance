@@ -7,25 +7,33 @@ api: post
 tag: info
 ---
 
+## Step 1: Connect to the site in context
 #>
 
 
 param (
     $url = "https://christianiabpos.sharepoint.com/sites/nexiintra-home"
-    )
+)
     
 
 $result = join-path $env:WORKDIR "pageinfo.response.json"
+
+$url = $url.Split("?")[0]
 $siteUrl = $url.ToLower().Split("/sitepages/")
 
+koksmat trace log 'Connecting to SharePoint...'
 Connect-PnPOnline -Url $siteUrl[0]  -ClientId $PNPAPPID -Tenant $PNPTENANTID -CertificatePath "$PNPCERTIFICATEPATH"
+
+<#
+## Step 2: Find page information from the Site Pages list 
+#>
 
 $pageName = $siteUrl[1]
 if ($null -eq $pageName) {
     $pageName = (Get-PnPHomePage).ToLower().Replace("sitepages/", "")
 }
 
-
+koksmat trace log "Quering pages..."
 $listName = "Site Pages"
 $items = get-pnplistitem -List $listName -Query "<View Scope='RecursiveAll'><Query><Where><Eq><FieldRef Name='FileLeafRef'/><Value Type='Text'>$pageName</Value></Eq></Where></Query></View>"
 [array]$versions = @()
@@ -41,6 +49,10 @@ foreach ($item in $items) {
     }
 }
 
+<#
+## Step 3: Get members of the Owners group
+#>
+koksmat trace log "Getting owners ..."
 [array]$Owners = Get-PnPGroup -AssociatedOwnerGroup 
 | Get-PnPGroupMember 
 | Where-Object { $_.IsSiteAdmin -ne $true }  
@@ -53,5 +65,9 @@ $siteInfo = @{
     versions   = $versions
 
 }
-# | ConvertTo-Json  | Out-File -FilePath $result -Encoding utf8NoBOM
+
+<#
+## Step 4: Store the result in a file with a wellknown name
+#>
 $siteInfo  | ConvertTo-Json  | Out-File -FilePath $result -Encoding utf8NoBOM
+koksmat trace log "Done"

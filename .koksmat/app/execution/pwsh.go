@@ -10,6 +10,8 @@ import (
 	"os/exec"
 	"path"
 	"strings"
+
+	"github.com/365admin/sharepoint-governance/utils"
 )
 
 func ExecutePowerShell(authentication string, authorization string, kitchen string, station string, scriptname string, journey string, args ...string) (string, error) {
@@ -45,7 +47,7 @@ func ExecutePowerShell(authentication string, authorization string, kitchen stri
 	}
 
 	cmd := exec.Command("pwsh", "-f", "run.ps1", "-nologo", "-noprofile")
-
+	cmd.Env = append(os.Environ(), "NATS_SUBJECT="+utils.NATS_SUBJECT)
 	cmd.Dir = sessionPath2
 
 	pipe, _ := cmd.StdoutPipe()
